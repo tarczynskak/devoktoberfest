@@ -14,7 +14,7 @@ build-parameters:
     - builder: custom
       commands:
         - npm install --production
-        - npx cds-dbm build --production
+        - cds build --production
 
 modules:
   # --------------------- SERVER MODULE ------------------------
@@ -27,7 +27,7 @@ modules:
         properties:
           srv-url: ${default-url}
     requires:
-      - name: devtoberfest-database
+      - name: postgres-database 
       
   - name: devtoberfest-db-deployer
     type: custom
@@ -46,15 +46,17 @@ modules:
     build-parameters:
       ignore: ["node_modules/"]
     requires:
-      - name: devtoberfest-database      
+      - name: postgres-database     
 
 resources:
-  - name: devtoberfest-database
+  - name: postgres-database
     parameters:
       path: ./pg-options.json
       service: postgresql-db
       service-plan: trial
       skip-service-updates:
         parameters: true
+      service-tags:
+        - plain    
     type: org.cloudfoundry.managed-service
     

@@ -1,0 +1,7 @@
+_schema-version: '3.1'
+ID: devtoberfest.extension
+extends: devtoberfest
+
+resources:
+  - name: postgres-database
+    type: org.cloudfoundry.existing-service

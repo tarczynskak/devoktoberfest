@@ -5,25 +5,44 @@
   "repository": "<Add your repository here>",
   "license": "UNLICENSED",
   "private": true,
-  "dependencies": {
-    "@sap/cds": "5.1.5",
-    "cds-dbm": "~0.0.26",
-    "cds-pg": "0.0.51",
-    "express": "^4"
+	"engines": {
+    "node": "^16"
+  },
+	"dependencies": {
+		"@sap/audit-logging": "^5.6.2",
+		"@sap/cds": "^5.9.7",
+		"@sap/cds-dk": "^4.9.7",
+		"@sap/cds-odata-v2-adapter-proxy": "^1.8.19",
+		"@sap/xsenv": "^3.4.0",
+		"@sap/xssec": "^3.2.14",
+		"bestzip": "^2.2.0",
+		"cds-dbm": "^0.0.36",
+		"cds-pg": "^0.1.33",
+		"docker": "^1.0.0",
+		"express": "^4.17.2",
+		"passport": "^0.6.0",
+    "pg": "^8.8.0"
   },
   "devDependencies": {
-    "mbt": "~1.2.1"
-  },
+		"@sap/ux-specification": "^1.84.7",
+		"mbt": "~1.2.1"
+	},
   "cds": {
     "build": {
       "tasks": [
         {
-          "use": "node-cf",
           "for": "node-cf",
-          "src": "srv"
+          "src": "srv",
+          "options": {
+            "model": [
+              "db",
+              "srv",
+              "app"
+            ]
+          }
         },
         {
-          "use": "postgres-cf",
+          "use": "cds-dbm/dist/build/postgres-cf",
           "for": "postgres-cf",
           "src": "db",
           "options": {
@@ -34,7 +53,11 @@
     },
     "requires": {
       "db": {
-        "kind": "database"
+        "kind": "database",
+        "dialect": "plain",
+        "[sqlite]": {
+          "kind": "sql"
+        }
       },
       "database": {
         "impl": "cds-pg",
@@ -61,6 +84,7 @@
     "start": "npx cds run",
     "start:docker": "docker-compose up",
     "build:cf": "mbt build",
-    "deploy:cf": "cf deploy mta_archives/devtoberfest_1.0.0.mtar"
+    "deploy:cf": "cf deploy mta_archives/devtoberfest_1.0.0.mtar --retries 0",
+    "deploy:cf:update": "cf deploy mta_archives/devtoberfest_1.0.0.mtar -e update.mtaext --retries 0"
   }
 }
